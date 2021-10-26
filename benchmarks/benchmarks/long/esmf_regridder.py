@@ -17,7 +17,8 @@ from esmf_regrid.tests.unit.schemes.test__cube_to_GridInfo import _grid_cube
 
 
 class PrepareScalabilityGridToGrid:
-    params = [50, 100, 200, 400, 600, 800]
+    timeout = 3600
+    params = [50, 100, 200, 400, 600, 800, 1100, 2200]
     param_names = ["grid width"]
     height = 100
     regridder = ESMFAreaWeightedRegridder
@@ -190,11 +191,76 @@ class PerformScalabilityGridToMesh(PerformScalabilityGridToGrid):
         return tgt
 
 
+class PerformScalability1kMeshToGrid(PerformScalabilityMeshToGrid):
+    timeout = 3600
+    grid_size = 1100
+    chunk_size = [grid_size * grid_size, 10]
+    file_name = "chunked_cube_1d_1k.nc"
+    # Define the target grid to be smaller so that time spent realising a large array
+    # does not dominate the time spent on regridding calculation. A number which is
+    # not a factor of the grid size is chosen so that the two grids will be slightly
+    # misaligned.
+    target_grid_size = 111
+
+    def setup_cache(self):
+        return super().setup_cache()
+
+
+class PerformScalability2kMeshToGrid(PerformScalabilityMeshToGrid):
+    timeout = 3600
+    grid_size = 2200
+    chunk_size = [grid_size * grid_size, 10]
+    file_name = "chunked_cube_1d_2k.nc"
+    # Define the target grid to be smaller so that time spent realising a large array
+    # does not dominate the time spent on regridding calculation. A number which is
+    # not a factor of the grid size is chosen so that the two grids will be slightly
+    # misaligned.
+    target_grid_size = 221
+
+    def setup_cache(self):
+        return super().setup_cache()
+
+
+
+# These benchmarks unusually long and are resource intensive so are skipped.
+# They can be run by manually removing the skip.
+@skip_benchmark
+class PerformScalability1kGridToMesh(PerformScalabilityGridToMesh):
+    timeout = 3600
+    grid_size = 1100
+    chunk_size = [grid_size, grid_size, 10]
+    # Define the target grid to be smaller so that time spent realising a large array
+    # does not dominate the time spent on regridding calculation. A number which is
+    # not a factor of the grid size is chosen so that the two grids will be slightly
+    # misaligned.
+    target_grid_size = 111
+
+    def setup_cache(self):
+        return super().setup_cache()
+
+
+# These benchmarks unusually long and are resource intensive so are skipped.
+# They can be run by manually removing the skip.
+@skip_benchmark
+class PerformScalability2kGridToMesh(PerformScalabilityGridToMesh):
+    timeout = 3600
+    grid_size = 2200
+    chunk_size = [grid_size, grid_size, 10]
+    # Define the target grid to be smaller so that time spent realising a large array
+    # does not dominate the time spent on regridding calculation. A number which is
+    # not a factor of the grid size is chosen so that the two grids will be slightly
+    # misaligned.
+    target_grid_size = 221
+
+    def setup_cache(self):
+        return super().setup_cache()
+
+
 # These benchmarks unusually long and are resource intensive so are skipped.
 # They can be run by manually removing the skip.
 @skip_benchmark
 class PerformScalability1kGridToGrid(PerformScalabilityGridToGrid):
-    timeout = 600
+    timeout = 3600
     grid_size = 1100
     chunk_size = [grid_size, grid_size, 10]
     # Define the target grid to be smaller so that time spent realising a large array
@@ -211,7 +277,7 @@ class PerformScalability1kGridToGrid(PerformScalabilityGridToGrid):
 # They can be run by manually removing the skip.
 @skip_benchmark
 class PerformScalability2kGridToGrid(PerformScalabilityGridToGrid):
-    timeout = 600
+    timeout = 3600
     grid_size = 2200
     chunk_size = [grid_size, grid_size, 10]
     # Define the target grid to be smaller so that time spent realising a large array
