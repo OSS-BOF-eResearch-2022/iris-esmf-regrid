@@ -46,9 +46,11 @@ def _cube_to_GridInfo(cube):
         # 2D coords must be AuxCoords, which do not have a circular attribute.
         circular = False
     lon_bound_array = lon.contiguous_bounds()
-    lon_bound_array = lon.units.convert(lon_bound_array, Unit("degrees"))
+    if crs is None:
+        lon_bound_array = lon.units.convert(lon_bound_array, Unit("degrees"))
     lat_bound_array = lat.contiguous_bounds()
-    lat_bound_array = lat.units.convert(lat_bound_array, Unit("degrees"))
+    if crs is None:
+        lat_bound_array = lat.units.convert(lat_bound_array, Unit("degrees"))
     return GridInfo(
         lon.points,
         lat.points,
