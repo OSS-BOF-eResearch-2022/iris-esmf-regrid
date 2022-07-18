@@ -378,13 +378,13 @@ def _regrid_rectilinear_to_rectilinear__perform(src_cube, regrid_info, mdtol):
     # chunks cover the entire horizontal plane (otherwise they would break
     # the regrid function).
     if len(grid_x.shape) == 1:
-        chunk_shape = (len(grid_y.points), len(grid_x.points))
+        chunk_shape = (len(grid_x.points), len(grid_y.points))
     else:
         chunk_shape = grid_x.shape
     new_data = _map_complete_blocks(
         src_cube,
         regrid,
-        (grid_x_dim, grid_y_dim),
+        (grid_y_dim, grid_x_dim),
         chunk_shape,
     )
 
@@ -594,7 +594,7 @@ def _regrid_rectilinear_to_unstructured__perform(src_cube, regrid_info, mdtol):
     new_data = _map_complete_blocks(
         src_cube,
         regrid,
-        (grid_x_dim, grid_y_dim),
+        (grid_y_dim, grid_x_dim),
         chunk_shape,
     )
 
