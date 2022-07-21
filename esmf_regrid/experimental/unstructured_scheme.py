@@ -328,6 +328,9 @@ class MeshToGridESMFRegridder(_ESMFRegridder):
             precomputed_weights=precomputed_weights,
             resolution=resolution,
         )
+        self.resolution = resolution
+        self.mesh, self.location = self.src
+        self.grid_x, self.grid_y = self.target
 
 
 class _MeshToGridESMFRegridder:
@@ -686,6 +689,9 @@ class GridToMeshESMFRegridder(_ESMFRegridder):
             precomputed_weights=precomputed_weights,
             resolution=resolution,
         )
+        self.resolution = resolution
+        self.mesh, self.location = self.target
+        self.grid_x, self.grid_y = self.src
 
 
 class _GridToMeshESMFRegridder:
