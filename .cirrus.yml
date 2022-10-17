@@ -10,7 +10,7 @@
 # Global defaults.
 #
 container:
-  image: python:3.10
+  image: python:3.9
   cpu: 2
   memory: 4G
 
@@ -22,9 +22,9 @@ env:
   # Maximum cache period (in weeks) before forcing a new cache upload.
   CACHE_PERIOD: "0"
   # Increment the build number to force new conda cache upload.
-  CONDA_CACHE_BUILD: "1"
+  CONDA_CACHE_BUILD: "0"
   # Increment the build number to force new nox cache upload.
-  NOX_CACHE_BUILD: "1"
+  NOX_CACHE_BUILD: "0"
   # Increment the build number to force new pip cache upload.
   PIP_CACHE_BUILD: "0"
   # Pip package to be installed.
@@ -138,7 +138,7 @@ benchmark_task:
   only_if: ${SKIP_BENCHMARK_TASK} == ""
   auto_cancellation: true
   env:
-    PY_VER: "3.10"
+    PY_VER: "3.9"
   name: "${CIRRUS_OS}: performance benchmarking"
   # Custom clone behaviour to enable ASV to access the PR base branch (if on a
   #  PR).
