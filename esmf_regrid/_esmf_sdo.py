@@ -16,10 +16,11 @@ class SDO(ABC):
     objects supported by ESMPy, Grids, Meshes, and LocStreams.
     """
 
-    def __init__(self, shape, index_offset, field_kwargs):
+    def __init__(self, shape, index_offset, field_kwargs, mask=None):
         self._shape = shape
         self._index_offset = index_offset
         self._field_kwargs = field_kwargs
+        self._mask = mask
 
     @abstractmethod
     def _make_esmf_sdo(self):
@@ -111,6 +112,7 @@ class GridInfo(SDO):
         circular=False,
         areas=None,
         center=False,
+        mask=None,
     ):
         """
         Create a :class:`GridInfo` object describing the grid.
@@ -195,6 +197,7 @@ class GridInfo(SDO):
             shape=shape,
             index_offset=1,
             field_kwargs={"staggerloc": ESMF.StaggerLoc.CENTER},
+            mask=mask,
         )
 
     def _as_esmf_info(self):
@@ -281,6 +284,13 @@ class GridInfo(SDO):
             grid_center_x[:] = truecenterlons
             grid_center_y = grid.get_coords(1, staggerloc=ESMF.StaggerLoc.CENTER)
             grid_center_y[:] = truecenterlats
+
+        if self._mask is not None:
+            grid.add_item(ESMF.GridItem.MASK, staggerloc=ESMF.StaggerLoc.CENTER)
+            grid_mask = grid.get_item(
+                ESMF.GridItem.MASK, staggerloc=ESMF.StaggerLoc.CENTER
+            )
+            grid_mask[:] = self._mask
 
         if areas is not None:
             grid.add_item(ESMF.GridItem.AREA, staggerloc=ESMF.StaggerLoc.CENTER)
