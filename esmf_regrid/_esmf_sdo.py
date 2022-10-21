@@ -62,6 +62,11 @@ class SDO(ABC):
         """Return the index offset."""
         return self._index_offset
 
+    @property
+    def mask(self):
+        """Return the index offset."""
+        return self._mask
+
     def _array_to_matrix(self, array):
         """
         Reshape data to a form that is compatible with weight matrices.
@@ -111,8 +116,8 @@ class GridInfo(SDO):
         crs=None,
         circular=False,
         areas=None,
-        center=False,
         mask=None,
+        center=False,
     ):
         """
         Create a :class:`GridInfo` object describing the grid.
@@ -141,6 +146,8 @@ class GridInfo(SDO):
             Array describing the areas associated with
             each face. If ``None``, then :mod:`ESMF` will use its own
             calculated areas.
+        mask: :obj:`~numpy.typing.ArrayLike`, optional
+            Array describing which elements :mod:`ESMF` will ignore.
         center : bool, default=False
             Describes if the center points of the grid cells are used in regridding
             calculations.
@@ -285,12 +292,12 @@ class GridInfo(SDO):
             grid_center_y = grid.get_coords(1, staggerloc=ESMF.StaggerLoc.CENTER)
             grid_center_y[:] = truecenterlats
 
-        if self._mask is not None:
+        if self.mask is not None:
             grid.add_item(ESMF.GridItem.MASK, staggerloc=ESMF.StaggerLoc.CENTER)
             grid_mask = grid.get_item(
                 ESMF.GridItem.MASK, staggerloc=ESMF.StaggerLoc.CENTER
             )
-            grid_mask[:] = self._mask
+            grid_mask[:] = self.mask
 
         if areas is not None:
             grid.add_item(ESMF.GridItem.AREA, staggerloc=ESMF.StaggerLoc.CENTER)
